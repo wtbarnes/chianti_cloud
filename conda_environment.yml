@@ -1,0 +1,16 @@
+
+name: chianti_cloud
+dependencies:
+- python=3.6
+- numpy
+- scipy
+- astropy
+- h5py
+- tornado=4.5.3
+- requests
+- pip:
+  - fortranformat
+  - plasmapy
+  - h5json
+  - h5pyd
+  - watchdog
