@@ -28,20 +28,32 @@ Presumably this could all be automated with something like ansible or better yet
     ```
 5. Download CHIANTI database and build HDF5 version with fiasco
     ```python
+    >>> import os
     >>> import fiasco.util
     >>> paths = fiasco.util.setup_paths()
+    >>> paths['hdf5_dbase_root'] = os.path.join(os.environ['HOME'], 'dbase', 'chianti.h5')
+    >>> if not os.path.exists(os.path.dirname(paths['hdf5_dbase_root'])):
+            os.makedirs(os.path.dirname(paths['hdf5_dbase_root']))
     >>> fiasco.util.download_dbase(paths['ascii_dbase_root'], ask_before=False) # can take a while
     >>> fiasco.util.build_hdf5_dbase(paths['ascii_dbase_root'], paths['hdf5_dbase_root'], ask_before=False) # can take a while
     ```
 6. Configure HDF5 server [`h5serv`](https://github.com/HDFGroup/h5serv)
     * `git clone https://github.com/HDFGroup/h5serv.git`
+    * Run tests and make sure all pass
     * Set the following configuration options in `h5serv/server/config.py`
+        * `port`: 5000
+        * `datapath`: `$HOME/dbase`
+        * `domain`: `fiasco.data`
+        * `log_file`: `$HOME/h5serv.log`
     * Set privileges to allow only `GET` requests (see the [h5serv docs](http://h5serv.readthedocs.io/en/latest/index.html))
+        ```bash
+        $ cd $HOME/h5serv/util/admin
+        $ python setacl.py -file $HOME/dbase/chianti.h5 +r-cudep
+        ```
     * Allow only selected user (not for public use yet) (see the [h5serv docs](http://h5serv.readthedocs.io/en/latest/index.html))
-    * Copy CHIANTI data into data path
     * Start the server
         ```
-        $ cd h5serv/server
+        $ cd $HOME/h5serv/server
         $ python app.py &
         ```
 8. Reverse proxy through Nginx
