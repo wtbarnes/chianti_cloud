@@ -37,6 +37,7 @@ Presumably this could all be automated with something like ansible or better yet
     >>> fiasco.util.download_dbase(paths['ascii_dbase_root'], ask_before=False) # can take a while
     >>> fiasco.util.build_hdf5_dbase(paths['ascii_dbase_root'], paths['hdf5_dbase_root'], ask_before=False) # can take a while
     ```
+    **NOTE**: It may be necessary to enable a 1GB swapfile in order to build the HDF5 file without the droplet killing it. Especially likely on small droplets. [See this discussion](https://www.digitalocean.com/community/questions/npm-gets-killed-no-matter-what?answer=18115) or [these instructions](https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-12-04). 
 6. Configure HDF5 server [`h5serv`](https://github.com/HDFGroup/h5serv)
     * `git clone https://github.com/HDFGroup/h5serv.git`
     * Run tests and make sure all pass
